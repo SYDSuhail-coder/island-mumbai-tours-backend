@@ -2,11 +2,15 @@ const express = require('express');
 const router = express.Router();
 const V1Controller = require('@routes/v1/controller');
 const v1Controller = new V1Controller();
+const apiKeyMiddleware = require('../../middleware/apiKey'); //  import karo
+
+router.use(apiKeyMiddleware); //saare routes pe apply hoga
+
 router.route("/service/health").get(v1Controller.health);
 
 //AdminLogin
 router.route("/service/createAdminLogin").post(v1Controller.createAdminLogin);
-router.route("/service/getAdminLogin").post(v1Controller.getAdminLogin); // FIX
+router.route("/service/getAdminLogin").post(v1Controller.getAdminLogin);
 router.route("/service/listAdminLogin").get(v1Controller.listAdminLogin);
 router.route("/service/deleteAdminLoginById/:id").delete(v1Controller.deleteAdminLoginById);
 
