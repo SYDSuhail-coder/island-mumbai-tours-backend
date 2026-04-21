@@ -1,11 +1,13 @@
 // controller.js
 const Currency = require("../../service/currency/currency");
-const AdminLogin = require("../../service/adminLogin/adminLogin")
+const AdminLogin = require("../../service/adminLogin/adminLogin");
+const roles = require("../../service/roles/roles");
 
 class ContentController {
     constructor() {
         this.Currency = new Currency();
         this.AdminLogin = new AdminLogin();
+        this.roles = new roles();
     }
 
     // Health check
@@ -139,7 +141,36 @@ class ContentController {
         })
     }
 
+    addRoles = (req, res) => {
+        let payload = {
+            role_name: req.body.name,
+            modules: req.body.modules,
+        };
 
+        this.roles.addRoles(payload).then(data => {
+            return res.status(200).json(data)
+        })
+    }
+
+    updateRoles = (req, res) => {
+        let paylaod = {
+            id: req.params.id,
+            modules: req.body.modules,
+            role_name: req.body.role_name
+        }
+        this.roles.updateRoles(paylaod).then(data => {
+            return res.status(200).json(data)
+        })
+    }
+
+    getRoles = (req, res) => {
+        let paylaod = {
+            // id:req.params.id
+        }
+        this.roles.getRoles(paylaod).then(data => {
+            return res.status(200).json(data)
+        })
+    }
 
 }
 
