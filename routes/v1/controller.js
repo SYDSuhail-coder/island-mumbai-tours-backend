@@ -1,9 +1,11 @@
 // controller.js
 const Currency = require("../../service/currency/currency");
+const AdminLogin = require("../../service/adminLogin/adminLogin")
 
 class ContentController {
     constructor() {
         this.Currency = new Currency();
+        this.AdminLogin = new AdminLogin();
     }
 
     // Health check
@@ -87,6 +89,58 @@ class ContentController {
                 });
             });
     };
+
+    createAdminLogin = (req, res) => {
+        let paylaod = {
+            userName: req.body.userName,
+            password: req.body.password,
+            roleId: req.body.roleId,
+        };
+        this.AdminLogin.createAdminLogin(paylaod).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => {
+            return res.status(500).json(err)
+        })
+    }
+
+
+    getAdminLogin = (req, res) => {
+        const payload = {
+            userName: req.body.userName,
+            password: req.body.password
+        };
+        this.AdminLogin.getAdminLogin(payload).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => {
+            return res.status(500).json(err)
+        })
+    }
+
+    listAdminLogin = (req, res) => {
+        let payload = {
+            from: req.query.from,
+            to: req.query.to
+        };
+        this.AdminLogin.listAdminLogin(payload).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => {
+            return res.status(500).json(err)
+        })
+    }
+
+    deleteAdminLoginById = (req, res) => {
+        let payload = {
+            id: req.params.id,
+        }
+        this.AdminLogin.deleteAdminLoginById(payload).then((data) => {
+            return res.status(200).json(data);
+        }).catch((err) => {
+            return res.status(500).json(err);
+        })
+    }
+
+
+
 }
 
 module.exports = ContentController;
