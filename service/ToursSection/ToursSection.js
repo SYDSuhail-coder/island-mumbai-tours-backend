@@ -24,20 +24,36 @@ class ToursSection {
 
     createToursSection(payload) {
         return new Promise(async (resolve, reject) => {
-            // coverImage upload
             let coverImageUrl = "";
-            if (payload.coverImage && payload.coverImage.length > 0) {
-                const upload = await this.uploadToCloudinary(payload.coverImage[0].buffer);
+            if (
+                payload.coverImage &&
+                Array.isArray(payload.coverImage) &&
+                payload.coverImage.length > 0
+            ) {
+                const upload = await this.uploadToCloudinary(
+                    payload.coverImage[0].buffer
+                );
                 coverImageUrl = upload.secure_url;
             }
-
-            // images[] upload
+            else if (typeof payload.coverImage === "string") {
+                coverImageUrl = payload.coverImage;
+            }
             let imagesUrls = [];
-            if (payload.images && payload.images.length > 0) {
+            if (
+                payload.images &&
+                Array.isArray(payload.images) &&
+                payload.images.length > 0 &&
+                payload.images[0].buffer
+            ) {
                 for (const file of payload.images) {
-                    const upload = await this.uploadToCloudinary(file.buffer);
+                    const upload = await this.uploadToCloudinary(
+                        file.buffer
+                    );
                     imagesUrls.push(upload.secure_url);
                 }
+            }
+            else if (Array.isArray(payload.images)) {
+                imagesUrls = payload.images;
             }
             const data = {
                 title: payload.title,
@@ -55,16 +71,27 @@ class ToursSection {
                 badge: payload.badge,
                 isActive: payload.isActive
             };
-
+            // save data
             this.mongo.add(data, 'Tours')
-                .then(response => {
+                .then((response) => {
                     resolve({
                         statusCode: 200,
                         message: "success",
                         data: response.data
                     });
+
+                })
+                .catch((err) => {
+                    // duplicate slug error
+                    if (err.code === 11000) {
+                        return resolve({
+                            statusCode: 400,
+                            message: "Your data already exists"
+                        });
+                    }
                 })
         });
+
     }
 
     getTouresSectionAll(payload) {
