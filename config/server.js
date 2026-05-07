@@ -31,7 +31,13 @@ class Server {
       },
     });
 
-    this.app.use(multerId.fields([{ name: 'files', maxCount: 10 }]));
+    // this.app.use(multerId.fields([{ name: 'files', maxCount: 10 }]));
+    // app.js mein change karo
+    this.app.use(multerId.fields([
+      { name: 'files', maxCount: 10 },
+      { name: 'coverImage', maxCount: 1 },
+      { name: 'images', maxCount: 5 }
+    ]));
 
     const router = require('@routes/route');
     this.app.use('/', router);

@@ -2,12 +2,14 @@
 const Currency = require("../../service/currency/currency");
 const AdminLogin = require("../../service/adminLogin/adminLogin");
 const roles = require("../../service/roles/roles");
+const ToursSection = require("../../service/ToursSection/ToursSection");
 
 class ContentController {
     constructor() {
         this.Currency = new Currency();
         this.AdminLogin = new AdminLogin();
         this.roles = new roles();
+        this.ToursSection = new ToursSection();
     }
 
     // Health check
@@ -170,6 +172,79 @@ class ContentController {
         this.roles.getRoles(paylaod).then(data => {
             return res.status(200).json(data)
         })
+    }
+
+    // ToursSection
+    createToursSection = (req, res) => {
+        const payload = {
+            title: req.body.title,
+            coverImage: req.files?.coverImage,
+            images: req.files?.images,
+            description: req.body.description,
+            duration: req.body.duration,
+            transport: req.body.transport,
+            location: req.body.location,
+            maxGuests: req.body.maxGuests,
+            pricePerPerson: req.body.pricePerPerson,
+            freeCancellation: req.body.freeCancellation,
+            rating: req.body.rating,
+            reviewsCount: req.body.reviewsCount,
+            badge: req.body.badge,
+            isActive: req.body.isActive
+        };
+
+        this.ToursSection.createToursSection(payload)
+            .then(data => res.status(200).json(data))
+            .catch(err => res.status(500).json(err));
+    };
+
+    getTouresSectionAll = (req, res) => {
+        let payload = {
+            from: req.query.from,
+            to: req.query.to
+        }
+        this.ToursSection.getTouresSectionAll(payload).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => res.status(500).json(err));
+    }
+
+    getTouresSectionById = (req, res) => {
+        let payload = {
+            slug: req.params.slug
+        };
+        this.ToursSection.getTouresSectionById(payload).then((data) => {
+            return res.status(200).json(data)
+        }).catch(err => res.status(500).json(err));
+    }
+
+    deleteTouresSectionById = (req, res) => {
+        let payload = {
+            slug: req.params.slug
+        };
+        this.ToursSection.deleteTouresSectionById(payload)
+            .then((data) => { return res.status(200).json(data) })
+            .catch((err) => { return res.status(500).json(err) })
+    }
+
+    updateTouresSectionById = (req, res) => {
+        const payload = {
+            slug: req.params.slug,
+            title: req.body.title,
+            description: req.body.description,
+            duration: req.body.duration,
+            transport: req.body.transport,
+            location: req.body.location,
+            maxGuests: req.body.maxGuests,
+            pricePerPerson: req.body.pricePerPerson,
+            freeCancellation: req.body.freeCancellation,
+            rating: req.body.rating,
+            reviewsCount: req.body.reviewsCount,
+            badge: req.body.badge,
+            isActive: req.body.isActive
+        };
+        this.ToursSection.updateTouresSectionById(payload)
+            .then((data) => { return res.status(200).json(data) })
+            .catch((err) => { return res.status(500).json(err) });
     }
 
 }

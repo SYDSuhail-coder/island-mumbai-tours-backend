@@ -35,6 +35,7 @@ mongoose.connect(dbUrl).then(() => {
   require('@model/currency');
   require('@model/adminLogin');
   require('@model/roles');
+  require('@model/toursSection')
 }).catch((err) => {
   console.log('no connection', err);
 });

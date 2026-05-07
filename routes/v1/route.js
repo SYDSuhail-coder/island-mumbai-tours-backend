@@ -3,7 +3,6 @@ const router = express.Router();
 const V1Controller = require('@routes/v1/controller');
 const v1Controller = new V1Controller();
 const apiKeyMiddleware = require('../../middleware/apiKey'); //  import karo
-
 router.use(apiKeyMiddleware); //saare routes pe apply hoga
 
 router.route("/service/health").get(v1Controller.health);
@@ -24,5 +23,12 @@ router.route("/service/currency/get").get(v1Controller.getCurrencyRates);
 router.route("/service/currency/convert").get(v1Controller.convertCurrency);
 router.route("/service/currency/save").post(v1Controller.saveCurrencyRates);
 router.route("/service/currency/db").get(v1Controller.getRates);
+
+// ToursSection
+router.route("/service/ToursSection").post(v1Controller.createToursSection);
+router.route("/service/getTouresSectionAll").get(v1Controller.getTouresSectionAll);
+router.route("/service/getTouresSectionById/:slug").get(v1Controller.getTouresSectionById);
+router.route("/service/deleteTouresSectionById/:slug").delete(v1Controller.deleteTouresSectionById);
+router.route("/service/updateTouresSectionById/:slug").put(v1Controller.updateTouresSectionById);
 
 module.exports = router;
