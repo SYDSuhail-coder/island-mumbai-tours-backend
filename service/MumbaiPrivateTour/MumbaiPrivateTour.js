@@ -3,7 +3,7 @@ const cloudinary = require("../../config/cloudinary");
 const streamifier = require("streamifier");
 const ObjectId = require("mongodb").ObjectId;
 
-class ToursSection {
+class MumbaiPrivateTour {
     constructor() {
         this.mongo = new Mongo();
     }
@@ -12,7 +12,7 @@ class ToursSection {
     uploadToCloudinary(buffer) {
         return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
-                { folder: "mumbai-tours" },
+                { folder: "mumbai-tours-private" },
                 (error, result) => {
                     if (error) return reject(error);
                     resolve(result);
@@ -22,7 +22,7 @@ class ToursSection {
         });
     }
 
-    createToursSection(payload) {
+    createMumbaiPrivateTour(payload) {
         return new Promise(async (resolve, reject) => {
             let coverImageUrl = "";
             if (
@@ -72,7 +72,7 @@ class ToursSection {
                 isActive: payload.isActive
             };
             // save data
-            this.mongo.add(data, 'Tours')
+            this.mongo.add(data, 'Private-Tours')
                 .then((response) => {
                     resolve({
                         statusCode: 200,
@@ -94,16 +94,16 @@ class ToursSection {
 
     }
 
-    getTouresSectionAll(payload) {
+    getMumbaiPrivateTourAll(payload) {
         return new Promise((resolve, reject) => {
             let page = Number(payload.from);
             let limit = Number(payload.to);
             let skip = (page - 1) * limit;
             let sort = { createdAt: -1 };
             let query = {};
-            this.mongo.findPagenation(query, sort, skip, limit, 'Tours')
+            this.mongo.findPagenation(query, sort, skip, limit, 'Private-Tours')
                 .then((result) => {
-                    this.mongo.findCount(query, 'Tours').then((count) => {
+                    this.mongo.findCount(query, 'Private-Tours').then((count) => {
                         return resolve({
                             statusCode: 200,
                             message: "success",
@@ -116,10 +116,10 @@ class ToursSection {
         })
     }
 
-    getTouresSectionById = (payload) => {
+    getMumbaiPrivateTourById = (payload) => {
         return new Promise((resolve, reject) => {
             let query = { slug: payload.slug };
-            this.mongo.findOne(query, 'Tours')
+            this.mongo.findOne(query, 'Private-Tours')
                 .then((data) => {
                     resolve({
                         statusCode: 200,
@@ -130,10 +130,10 @@ class ToursSection {
         });
     }
 
-    deleteTouresSectionById = (payload) => {
+    deleteMumbaiPrivateTourById = (payload) => {
         return new Promise((resolve, reject) => {
             let query = { slug: payload.slug };
-            this.mongo.delete(query, 'Tours')
+            this.mongo.delete(query, 'Private-Tours')
                 .then((data) => {
                     resolve({
                         statusCode: 200,
@@ -144,7 +144,8 @@ class ToursSection {
         });
     }
 
-     updateToursSectionById(payload) {
+
+    updateMumbaiPrivateTourById(payload) {
         return new Promise(async (resolve, reject) => {
             let query = { slug: payload.slug };
             let coverImageUrl = "";
@@ -224,6 +225,7 @@ class ToursSection {
     }
 
 
+
 }
 
-module.exports = ToursSection;
+module.exports = MumbaiPrivateTour;

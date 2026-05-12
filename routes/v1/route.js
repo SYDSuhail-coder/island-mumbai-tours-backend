@@ -29,6 +29,20 @@ router.route("/service/ToursSection").post(v1Controller.createToursSection);
 router.route("/service/getTouresSectionAll").get(v1Controller.getTouresSectionAll);
 router.route("/service/getTouresSectionById/:slug").get(v1Controller.getTouresSectionById);
 router.route("/service/deleteTouresSectionById/:slug").delete(v1Controller.deleteTouresSectionById);
-router.route("/service/updateTouresSectionById/:slug").put(v1Controller.updateTouresSectionById);
+router.route("/service/updateToursSectionById/:slug").put(v1Controller.updateToursSectionById);
+
+// MumbaiPrivateTour
+router.route("/service/createMumbaiPrivateTour").post(v1Controller.createMumbaiPrivateTour);
+router.route("/service/getMumbaiPrivateTourAll").get(v1Controller.getMumbaiPrivateTourAll);
+router.route("/service/getMumbaiPrivateTourById/:slug").get(v1Controller.getMumbaiPrivateTourById);
+router.route("/service/deleteMumbaiPrivateTourById/:slug").delete(v1Controller.deleteMumbaiPrivateTourById);
+router.route("/service/updateMumbaiPrivateTourById/:slug").put(v1Controller.updateMumbaiPrivateTourById);
+
+// MumbaiWallingTour
+router.route("/service/createMumbaiWalkingTour").post(v1Controller.createMumbaiWalkingTour);
+router.route("/service/getMumbaiWalkingTourAll").get(v1Controller.getMumbaiWalkingTourAll);
+router.route("/service/getMumbaiWalkingTourById/:slug").get(v1Controller.getMumbaiWalkingTourById);
+router.route("/service/deleteMumbaiWalkingTourById/:slug").delete(v1Controller.deleteMumbaiWalkingTourById);
+router.route("/service/updateMumbaiWalkingTourById/:slug").put(v1Controller.updateMumbaiWalkingTourById);
 
 module.exports = router;
