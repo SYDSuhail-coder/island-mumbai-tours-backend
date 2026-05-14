@@ -54,6 +54,10 @@ const mumbaiPrivateTourSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+    child: {
+      type: String,
+      default: ""
+    },
 
     freeCancellation: {
       type: Boolean,

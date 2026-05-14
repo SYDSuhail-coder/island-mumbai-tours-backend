@@ -55,6 +55,12 @@ const mumbaiWalkingTourSchema = new mongoose.Schema(
       required: true
     },
 
+    child: {
+      type: String,
+      default: ""
+    },
+
+
     freeCancellation: {
       type: Boolean,
       default: false
