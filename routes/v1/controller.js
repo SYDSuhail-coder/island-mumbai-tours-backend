@@ -353,15 +353,15 @@ class ContentController {
             .catch(err => res.status(500).json(err));
     };
 
-    getMumbaiWalkingTourAll = (req, res) => {
-        let payload = {
-            from: req.query.from,
-            to: req.query.to
-        }
-        this.MumbaiWalkingTour.getMumbaiWalkingTourAll(payload).then((data) => {
-            return res.status(200).json(data);
-        }).catch(err => res.status(500).json(err));
+   getMumbaiWalkingTourAll = (req, res) => {
+    let payload = {
+        from: req.query.from,
+        to: req.query.to
     }
+    this.MumbaiWalkingTour.getMumbaiWalkingTourAll(payload).then((data) => {
+        return res.status(200).json(data);
+    }).catch(err => res.status(500).json(err));
+}
 
     getMumbaiWalkingTourById = (req, res) => {
         let payload = {
