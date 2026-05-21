@@ -246,7 +246,10 @@ class ContentController {
             rating: req.body.rating,
             reviewsCount: req.body.reviewsCount,
             badge: req.body.badge,
-            isActive: req.body.isActive
+            isActive: req.body.isActive,
+            coverImage: req.files?.coverImage || req.body.existingCoverImage,
+            images: req.files?.images || [],                                 
+            existingImages: req.body.existingImages || [], 
         };
         this.ToursSection.updateToursSectionById(payload)
             .then((data) => { return res.status(200).json(data) })
@@ -353,15 +356,15 @@ class ContentController {
             .catch(err => res.status(500).json(err));
     };
 
-   getMumbaiWalkingTourAll = (req, res) => {
-    let payload = {
-        from: req.query.from,
-        to: req.query.to
+    getMumbaiWalkingTourAll = (req, res) => {
+        let payload = {
+            from: req.query.from,
+            to: req.query.to
+        }
+        this.MumbaiWalkingTour.getMumbaiWalkingTourAll(payload).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => res.status(500).json(err));
     }
-    this.MumbaiWalkingTour.getMumbaiWalkingTourAll(payload).then((data) => {
-        return res.status(200).json(data);
-    }).catch(err => res.status(500).json(err));
-}
 
     getMumbaiWalkingTourById = (req, res) => {
         let payload = {
