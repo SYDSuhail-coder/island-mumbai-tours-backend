@@ -324,7 +324,10 @@ class ContentController {
             rating: req.body.rating,
             reviewsCount: req.body.reviewsCount,
             badge: req.body.badge,
-            isActive: req.body.isActive
+            isActive: req.body.isActive,
+            coverImage: req.files?.coverImage || req.body.existingCoverImage,
+            images: req.files?.images || [],                                 
+            existingImages: req.body.existingImages || [], 
         };
         this.MumbaiPrivateTour.updateMumbaiPrivateTourById(payload)
             .then((data) => { return res.status(200).json(data) })
@@ -399,7 +402,10 @@ class ContentController {
             rating: req.body.rating,
             reviewsCount: req.body.reviewsCount,
             badge: req.body.badge,
-            isActive: req.body.isActive
+            isActive: req.body.isActive,
+            coverImage: req.files?.coverImage || req.body.existingCoverImage,
+            images: req.files?.images || [],                                 
+            existingImages: req.body.existingImages || [], 
         };
         this.MumbaiWalkingTour.updateMumbaiWalkingTourById(payload)
             .then((data) => { return res.status(200).json(data) })

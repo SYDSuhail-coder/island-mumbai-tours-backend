@@ -145,7 +145,6 @@ class MumbaiPrivateTour {
         });
     }
 
-
     updateMumbaiPrivateTourById(payload) {
         return new Promise(async (resolve, reject) => {
             let query = { slug: payload.slug };
@@ -153,40 +152,50 @@ class MumbaiPrivateTour {
             if (
                 payload.coverImage &&
                 Array.isArray(payload.coverImage) &&
-                payload.coverImage.length > 0
+                payload.coverImage.length > 0 &&
+                payload.coverImage[0].buffer
             ) {
-                const upload = await this.uploadToCloudinary(
-                    payload.coverImage[0].buffer
-                );
+                // Nai file upload karo
+                const upload = await this.uploadToCloudinary(payload.coverImage[0].buffer);
                 coverImageUrl = upload.secure_url;
-            }
-            else if (typeof payload.coverImage === "string") {
+            } else if (typeof payload.coverImage === "string" && payload.coverImage) {
                 coverImageUrl = payload.coverImage;
             }
-            let imagesUrls = [];
+
+            // ── Gallery Images ──
+            const existingImages = Array.isArray(payload.existingImages)
+                ? payload.existingImages
+                : payload.existingImages
+                    ? [payload.existingImages]  // single string → array
+                    : [];
+
+            // Nai files cloudinary par upload karo
+            let newImageUrls = [];
             if (
                 payload.images &&
                 Array.isArray(payload.images) &&
                 payload.images.length > 0 &&
                 payload.images[0].buffer
             ) {
-                imagesUrls = await Promise.all(
+                newImageUrls = await Promise.all(
                     payload.images.map(async (file) => {
-                        const upload = await this.uploadToCloudinary(
-                            file.buffer
-                        );
+                        const upload = await this.uploadToCloudinary(file.buffer);
                         return upload.secure_url;
                     })
                 );
             }
 
-            // direct urls
-            else if (Array.isArray(payload.images)) {
-                imagesUrls = payload.images;
-            }
-            // update data
+            // Existing + New merge
+            const imagesUrls = [...existingImages, ...newImageUrls];
+
+            // ── Update Data ──
             const updateData = {
                 title: payload.title,
+                slug: payload.title
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9\s-]/g, "")
+                    .replace(/\s+/g, "-"),
                 description: payload.description,
                 duration: payload.duration,
                 transport: payload.transport,
@@ -198,16 +207,16 @@ class MumbaiPrivateTour {
                 rating: payload.rating,
                 reviewsCount: payload.reviewsCount,
                 badge: payload.badge,
-                isActive: payload.isActive
+                isActive: payload.isActive,
+                images: imagesUrls,  //  hamesha update hoga
             };
+
+            // Cover image — sirf tab update karo jab URL mile
             if (coverImageUrl) {
                 updateData.coverImage = coverImageUrl;
             }
-            // only update if images exist
-            if (imagesUrls.length > 0) {
-                updateData.images = imagesUrls;
-            }
-            // update mongodb
+
+            // ── MongoDB Update ──
             this.mongo.update(query, updateData, 'Private-Tours')
                 .then((response) => {
                     resolve({
@@ -223,9 +232,7 @@ class MumbaiPrivateTour {
                     });
                 });
         });
-
     }
-
 
 
 }
