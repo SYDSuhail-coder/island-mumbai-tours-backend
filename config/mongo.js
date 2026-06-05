@@ -38,6 +38,8 @@ mongoose.connect(dbUrl).then(() => {
   require('@model/toursSection');
   require('@model/mumbaiPrivateTour');
   require('@model/mumbaiWalkingTour');
+  require('@model/bookingSection');
+  require('@model/bookingDetails');
 }).catch((err) => {
   console.log('no connection', err);
 });

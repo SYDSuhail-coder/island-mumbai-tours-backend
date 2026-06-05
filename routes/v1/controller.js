@@ -5,7 +5,8 @@ const roles = require("../../service/roles/roles");
 const ToursSection = require("../../service/ToursSection/ToursSection");
 const MumbaiPrivateTour = require("../../service/MumbaiPrivateTour/MumbaiPrivateTour");
 const MumbaiWalkingTour = require("../../service/MumbaiWalkingTour/MumbaiWalkingTour");
-
+const BookingSection = require("../../service/BookingSection/BookingSection")
+const BookingDetails = require("../../service/BookingDetails/BookingDetails")
 class ContentController {
     constructor() {
         this.Currency = new Currency();
@@ -14,6 +15,8 @@ class ContentController {
         this.ToursSection = new ToursSection();
         this.MumbaiPrivateTour = new MumbaiPrivateTour();
         this.MumbaiWalkingTour = new MumbaiWalkingTour();
+        this.BookingSection = new BookingSection();
+        this.BookingDetails = new BookingDetails();
     }
 
     // Health check
@@ -403,6 +406,75 @@ class ContentController {
             .catch((err) => { return res.status(500).json(err) });
     }
 
+    //   BookingDetails
+    createBookingDetails = (req, res) => {
+        const payload = {
+            tourName: req.body.tourName,
+            adultPrice: req.body.adultPrice,
+            childPrice: req.body.childPrice,
+            duration: req.body.duration,
+            highlights: req.body.highlights,
+            timeslots: req.body.timeslots,
+        }
+        this.BookingDetails.createBookingDetails(payload)
+            .then((data) => { return res.status(200).json(data) })
+            .catch((err) => { return res.status(500).json(err) });
+    }
+
+
+    getBookingDetails = (req, res) => {
+        this.BookingDetails.getBookingDetails()
+            .then((data) => res.status(200).json(data))
+            .catch((err) => res.status(500).json(err));
+    }
+
+    updateBookingDetails = (req, res) => {
+        const payload = {
+            tourName:req.params.tourName,
+            adultPrice: req.body.adultPrice,
+            childPrice: req.body.childPrice,
+            duration: req.body.duration,
+            highlights: req.body.highlights,
+            timeslots: req.body.timeslots,
+        };
+        this.BookingDetails.updateBookingDetails(payload)
+            .then((data) => res.status(200).json(data))
+            .catch((err) => res.status(500).json(err));
+    }
+
+    // BookingSection
+    createBookingSection = (req, res) => {
+        const payload = {
+            bookingId: `BK-${Date.now()}`,
+            tour: req.body.tour,
+            date: req.body.date,
+            adults: Number(req.body.adults),
+            children: Number(req.body.children),
+            name: req.body.name,
+            mobile: req.body.mobile,
+            email: req.body.email || "",
+            duration: req.body.duration || "",
+            highlights: req.body.highlights || [],
+            timeslot: req.body.timeslot || "",
+            bookingStatus: "Pending",
+        };
+
+        this.BookingSection.createBookingSection(payload)
+            .then((data) => { return res.status(200).json(data) })
+            .catch((err) => {
+                if (err.statusCode === 409) {
+                    return res.status(409).json({ message: err.message });
+                }
+                return res.status(500).json(err);
+            });
+    }
+
+
+    getBookingSection = (req, res) => {
+        this.BookingSection.getBookingSection()
+            .then((data) => res.status(200).json(data))
+            .catch((err) => res.status(500).json(err));
+    }
 
 }
 

@@ -45,4 +45,14 @@ router.route("/service/getMumbaiWalkingTourById/:slug").get(v1Controller.getMumb
 router.route("/service/deleteMumbaiWalkingTourById/:slug").delete(v1Controller.deleteMumbaiWalkingTourById);
 router.route("/service/updateMumbaiWalkingTourById/:slug").put(v1Controller.updateMumbaiWalkingTourById);
 
+//BookingDetails
+router.route("/service/createBookingDetails").post(v1Controller.createBookingDetails);
+router.route("/service/getBookingDetails").get(v1Controller.getBookingDetails);
+router.route("/service/updateBookingDetails/:tourName").put(v1Controller.updateBookingDetails);
+
+//BookingSection
+router.route("/service/createBookingSection").post(v1Controller.createBookingSection);
+router.route("/service/getBookingSection").get(v1Controller.getBookingSection);
+
+
 module.exports = router;
