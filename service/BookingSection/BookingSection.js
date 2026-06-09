@@ -7,54 +7,94 @@ class BookingSection {
 
     createBookingSection = (payload) => {
         return new Promise(async (resolve, reject) => {
-            try {
-                const existing = await this.mongo.findOne(
-                    {
-                        email: payload.email,
-                        tour: payload.tour,
-                        date: new Date(payload.date)  // date compare ke liye
-                    },
-                    'bookingSection'
-                );
+            // Duplicate check
+            const existing = await this.mongo.findOne(
+                {
+                    email: payload.email,
+                    tour: payload.tour,
+                    date: new Date(payload.date)
+                },
+                'bookingSection'
+            );
 
-                if (existing && existing.data) {
-                    return reject({
-                        statusCode: 409,
-                        message: "You've already booked this tour for the selected date."
-                    });
-                }
+            if (existing && existing.data) {
+                return reject({
+                    statusCode: 409,
+                    message: "You've already booked this tour for the selected date."
+                });
+            }
 
-                // Tour price fetch karo
+            let totalAmount = 0;
+
+            if (payload.bookingType === "book-now-page") {
                 const tourData = await this.mongo.findOne({ tourName: payload.tour }, 'BookingDetails');
                 const tour = tourData.data;
+                if (!tour) return reject({ statusCode: 400, message: "Invalid tour selected" });
+                totalAmount = tour.adultPrice * Number(payload.adults) + tour.childPrice * Number(payload.children);
 
-                if (!tour) {
-                    return reject({ statusCode: 400, message: "Invalid tour selected" });
-                }
+            } else if (payload.bookingType === "walking-tour") {
+                const tourData = await this.mongo.findOne({ slug: payload.slug }, 'Walking-Tours');
+                const tour = tourData.data;
+                if (!tour) return reject({ statusCode: 400, message: "Invalid tour selected" });
+                const childPrice = Number(String(tour.child).replace(/\D/g, "")) || 500;
+                totalAmount = tour.pricePerPerson * Number(payload.adults) + childPrice * Number(payload.children);
 
-                // totalAmount calculate karo
-                const totalAmount =
-                    tour.adultPrice * Number(payload.adults) +
-                    tour.childPrice * Number(payload.children);
+            } else if (payload.bookingType === "private-tour") {
+                const tourData = await this.mongo.findOne({ slug: payload.slug }, 'Private-Tours');
+                const tour = tourData.data;
+                if (!tour) return reject({ statusCode: 400, message: "Invalid tour selected" });
+                const childPrice = Number(String(tour.child).replace(/\D/g, "")) || 500;
+                totalAmount = tour.pricePerPerson * Number(payload.adults) + childPrice * Number(payload.children);
 
-                const finalPayload = { ...payload, totalAmount };
+            } else if (payload.bookingType === "tours") {
+                const tourData = await this.mongo.findOne({ slug: payload.slug }, 'Tours');
+                const tour = tourData.data;
+                if (!tour) return reject({ statusCode: 400, message: "Invalid tour selected" });
+                const childPrice = Number(String(tour.child).replace(/\D/g, "")) || 500;
+                totalAmount = tour.pricePerPerson * Number(payload.adults) + childPrice * Number(payload.children);
 
-                this.mongo.add(finalPayload, 'bookingSection')
-                    .then((data) => resolve({ statusCode: 200, result: data }))
-                    .catch((err) => reject(err));
-
-            } catch (err) {
-                return reject(err);
+            } else {
+                return reject({ statusCode: 400, message: "Invalid booking type" });
             }
+
+            const finalPayload = { ...payload, totalAmount };
+
+            this.mongo.add(finalPayload, 'bookingSection')
+                .then((data) => resolve({ statusCode: 200, message: "success", result: data }))
+
         });
     }
 
-    getBookingSection = () => {
+    getBookingSection = (payload) => {
         return new Promise((resolve, reject) => {
-            this.mongo.find({}, 'bookingSection')
-                .then((data) => resolve({ statusCode: 200, result: data }))
-                .catch((err) => reject(err))
-        })
+            let page = Number(payload.from) || 1;
+            let limit = Number(payload.to) || 10;
+            let skip = (page - 1) * limit;
+            let sort = { createdAt: -1 };
+            let query = {};
+            this.mongo.findPagenation(
+                query,
+                sort,
+                skip,
+                limit,
+                "bookingSection"
+            )
+                .then((result) => {
+                    this.mongo.findCount(
+                        query,
+                        "bookingSection"
+                    )
+                        .then((count) => {
+                            resolve({
+                                statusCode: 200,
+                                message: "success",
+                                totalcount: count,
+                                count: result?.data?.length || 0,
+                                data: result.data
+                            });
+                        });
+                })
+        });
     }
 }
 

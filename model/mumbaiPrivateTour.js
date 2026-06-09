@@ -82,7 +82,11 @@ const mumbaiPrivateTourSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
-    }
+    },
+    bookingType: {
+      type: String,
+      default: "private-tour"
+    },
   },
   {
     timestamps: true

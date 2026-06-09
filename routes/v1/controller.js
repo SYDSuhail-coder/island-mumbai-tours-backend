@@ -423,14 +423,28 @@ class ContentController {
 
 
     getBookingDetails = (req, res) => {
-        this.BookingDetails.getBookingDetails()
+        let payload = {
+            from: req.query.from,
+            to: req.query.to
+        }
+        this.BookingDetails.getBookingDetails(payload)
             .then((data) => res.status(200).json(data))
             .catch((err) => res.status(500).json(err));
     }
 
+    getBookingDetailsById = (req, res) => {
+        const payload = {
+            id: req.params.id
+        };
+        this.BookingDetails.getBookingDetailsById(payload)
+            .then((data) => res.status(200).json(data))
+            .catch((err) => res.status(500).json(err));
+    };
+
     updateBookingDetails = (req, res) => {
         const payload = {
-            tourName:req.params.tourName,
+            id: req.params.id,
+            tourName: req.body.tourName,
             adultPrice: req.body.adultPrice,
             childPrice: req.body.childPrice,
             duration: req.body.duration,
@@ -442,36 +456,50 @@ class ContentController {
             .catch((err) => res.status(500).json(err));
     }
 
+    deleteBookingDetails = (req, res) => {
+        const payload = {
+            id: req.params.id
+        };
+        this.BookingDetails.deleteBookingDetails(payload)
+            .then((data) => res.status(200).json(data))
+            .catch((err) => res.status(500).json(err));
+
+    }
+
     // BookingSection
     createBookingSection = (req, res) => {
         const payload = {
             bookingId: `BK-${Date.now()}`,
+            bookingType: req.body.bookingType,
             tour: req.body.tour,
+            slug: req.body.slug || "",
             date: req.body.date,
-            adults: Number(req.body.adults),
-            children: Number(req.body.children),
+            adults: Number(req.body.adults || 1),
+            children: Number(req.body.children || 0),
             name: req.body.name,
             mobile: req.body.mobile,
             email: req.body.email || "",
+            time: req.body.time || "",
             duration: req.body.duration || "",
             highlights: req.body.highlights || [],
             timeslot: req.body.timeslot || "",
             bookingStatus: "Pending",
         };
-
         this.BookingSection.createBookingSection(payload)
-            .then((data) => { return res.status(200).json(data) })
+            .then((data) => res.status(200).json(data))
             .catch((err) => {
-                if (err.statusCode === 409) {
-                    return res.status(409).json({ message: err.message });
-                }
+                if (err.statusCode === 409) return res.status(409).json({ message: err.message });
+                if (err.statusCode === 400) return res.status(400).json({ message: err.message });
                 return res.status(500).json(err);
             });
     }
 
-
     getBookingSection = (req, res) => {
-        this.BookingSection.getBookingSection()
+        let payload = {
+            from: req.query.from,
+            to: req.query.to
+        }
+        this.BookingSection.getBookingSection(payload)
             .then((data) => res.status(200).json(data))
             .catch((err) => res.status(500).json(err));
     }

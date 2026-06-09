@@ -7,6 +7,9 @@ const bookingDetailsSchema = new mongoose.Schema({
     duration: [{ type: String, required: true }],
     highlights: [{ type: String }],
     timeslots: [{ type: String }],
+    bookingType: {type: String,
+        default: "book-now-page"
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model("BookingDetails", bookingDetailsSchema);

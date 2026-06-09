@@ -82,7 +82,11 @@ const toursSectionSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
-    }
+    },
+    bookingType: {
+      type: String,
+      default: "tours"
+    },
   },
   {
     timestamps: true

@@ -84,7 +84,11 @@ const mumbaiWalkingTourSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
-    }
+    },
+    bookingType: {
+      type: String,
+      default: "walking-tour"
+    },
   },
   {
     timestamps: true

@@ -207,7 +207,7 @@ class ToursSection {
                 updateData.images = imagesUrls;
             }
             // update mongodb
-            this.mongo.update(query, updateData, 'Private-Tours')
+            this.mongo.update(query, updateData, 'Tours')
                 .then((response) => {
                     resolve({
                         statusCode: 200,

@@ -102,7 +102,7 @@ class MumbaiWalkingTour {
             let skip = (page - 1) * limit;
             let sort = { createdAt: -1 };
             let query = {};
-            this.mongo.findPagenation(query, sort, skip, limit, 'Private-Tours')
+            this.mongo.findPagenation(query, sort, skip, limit, 'Walking-Tours')
                 .then((result) => {
                     this.mongo.findCount(query, 'Walking-Tours').then((count) => {
                         return resolve({
@@ -207,7 +207,7 @@ class MumbaiWalkingTour {
                 updateData.images = imagesUrls;
             }
             // update mongodb
-            this.mongo.update(query, updateData, 'Private-Tours')
+            this.mongo.update(query, updateData, 'Walking-Tours')
                 .then((response) => {
                     resolve({
                         statusCode: 200,

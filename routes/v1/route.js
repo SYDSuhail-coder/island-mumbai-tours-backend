@@ -48,7 +48,9 @@ router.route("/service/updateMumbaiWalkingTourById/:slug").put(v1Controller.upda
 //BookingDetails
 router.route("/service/createBookingDetails").post(v1Controller.createBookingDetails);
 router.route("/service/getBookingDetails").get(v1Controller.getBookingDetails);
-router.route("/service/updateBookingDetails/:tourName").put(v1Controller.updateBookingDetails);
+router.route("/service/getBookingDetailsById/:id").get(v1Controller.getBookingDetailsById);
+router.route("/service/updateBookingDetails/:id").put(v1Controller.updateBookingDetails);
+router.route("/service/deleteBookingDetails/:id").delete(v1Controller.deleteBookingDetails);
 
 //BookingSection
 router.route("/service/createBookingSection").post(v1Controller.createBookingSection);
