@@ -54,7 +54,7 @@ class Mongo {
     }
 
     find = (query, modelName) => {
-        
+
         let Model = mongoose.model(modelName);
         return new Promise((resolve, reject) => {
             Model.find(query).then(result => {
@@ -69,7 +69,7 @@ class Mongo {
         let Model = mongoose.model(modelName);
         return new Promise((resolve, reject) => {
             // Model.find(query).count().then(result => {
-                Model.countDocuments(query).then(result => {
+            Model.countDocuments(query).then(result => {
                 resolve(result);
             }).catch(err => {
                 reject({ error: err.message });
@@ -111,7 +111,7 @@ class Mongo {
     }
 
     paginationFind = (query, skip, limit, modelName) => {
-        let Model =  mongoose.model(modelName);
+        let Model = mongoose.model(modelName);
         return new Promise((resolve, reject) => {
             Model.find(query).skip(skip).limit(limit).then(result => {
                 if (result.length == 0) {
@@ -147,7 +147,7 @@ class Mongo {
         });
     }
 
-    findProject = (query,project,modelName) => {
+    findProject = (query, project, modelName) => {
         let Model = mongoose.model(modelName);
         return new Promise((resolve, reject) => {
             Model.find(query).select(project).then(result => {
@@ -173,6 +173,22 @@ class Mongo {
         let Model = mongoose.model(modelName);
         return new Promise((resolve, reject) => {
             Model.deleteMany(query).then(result => {
+                resolve({ data: result });
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
+
+
+    findOneAndUpdate = (query, payload, modelName) => {
+        let Model = mongoose.model(modelName);
+        return new Promise((resolve, reject) => {
+            Model.findOneAndUpdate(
+                query,
+                { $set: payload },
+                { new: true }
+            ).then(result => {
                 resolve({ data: result });
             }).catch(err => {
                 reject(err);

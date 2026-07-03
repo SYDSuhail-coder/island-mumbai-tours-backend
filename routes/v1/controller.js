@@ -504,6 +504,27 @@ class ContentController {
             .catch((err) => res.status(500).json(err));
     }
 
+    getBookingById = (req, res) => {
+        let payload = { bookingId: req.params.bookingId }
+        this.BookingSection.getBookingById(payload)
+            .then((data) => res.status(200).json(data))
+            .catch((err) => res.status(500).json(err));
+    }
+
+    updateBookingStatus = (req, res) => {
+        const payload = {
+            bookingId: req.params.bookingId,
+            bookingStatus: req.body.bookingStatus,
+            guideName: req.body.guideName
+        };
+
+        this.BookingSection.updateBookingStatus(payload)
+            .then((data) => res.status(200).json(data))
+            .catch((err) => {
+                res.status(err.statusCode || 500).json(err);
+            });
+    }
+
 }
 
 module.exports = ContentController;

@@ -96,6 +96,60 @@ class BookingSection {
                 })
         });
     }
+
+    getBookingById = (payload) => {
+        return new Promise((resolve, reject) => {
+            const query = ({ bookingId: payload.bookingId });
+            this.mongo.findOne(query, 'bookingSection')
+                .then((data) => {
+                    if (!data || !data.data) return reject({ statusCode: 404, message: "Booking not found" });
+                    resolve({ statusCode: 200, message: "success", result: data.data });
+                })
+        });
+    }
+
+    updateBookingStatus = (payload) => {
+        return new Promise((resolve, reject) => {
+            const updateFields = {
+                bookingStatus: payload.bookingStatus,
+                updatedAt: new Date()
+            };
+
+            if (payload.guideName !== undefined) {
+                updateFields.guideName = payload.guideName;
+            }
+
+            if (payload.bookingStatus === "Cancelled") {
+                updateFields.guideName = "";
+            }
+
+            if (payload.bookingStatus === "Confirmed") {
+                updateFields.confirmedAt = new Date();
+            }
+
+            this.mongo.findOneAndUpdate(
+                { bookingId: payload.bookingId },
+                updateFields,
+                "bookingSection"
+            )
+                .then((data) => {
+                    if (!data || !data.data) {
+                        return reject({
+                            statusCode: 404,
+                            message: "Booking not found"
+                        });
+                    }
+
+                    resolve({
+                        statusCode: 200,
+                        message: "Booking status updated successfully",
+                        result: data.data
+                    });
+                })
+                .catch((err) => reject(err));
+        });
+    };
+
 }
 
 module.exports = BookingSection;

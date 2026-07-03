@@ -55,6 +55,8 @@ router.route("/service/deleteBookingDetails/:id").delete(v1Controller.deleteBook
 //BookingSection
 router.route("/service/createBookingSection").post(v1Controller.createBookingSection);
 router.route("/service/getBookingSection").get(v1Controller.getBookingSection);
+router.route("/service/getBookingById/:bookingId").get(v1Controller.getBookingById)
+router.route("/service/updateBookingStatus/:bookingId").put(v1Controller.updateBookingStatus);
 
 
 module.exports = router;

@@ -25,7 +25,9 @@ const bookingSectionSchema = new mongoose.Schema(
       type: String,
       enum: ["Pending", "Confirmed", "Cancelled"],
       default: "Pending",
-    }
+    },
+    guideName: { type: String, default: "", trim: true },
+    confirmedAt: { type: Date, default: null },
   },
   { timestamps: true }
 );
